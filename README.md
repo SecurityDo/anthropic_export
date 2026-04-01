@@ -53,3 +53,37 @@ JSONL (one JSON object per line) on **stdout** -- the standard format for SIEM i
 {"event_type":"anthropic.messages_usage","timestamp":"2026-03-25T00:00:00Z","data":{"model":"claude-sonnet-4-20250514","uncached_input_tokens":12345,"output_tokens":5000,...}}
 {"event_type":"anthropic.cost","timestamp":"2026-03-25T00:00:00Z","data":{"amount":"1.23","currency":"USD","cost_type":"tokens","model":"claude-sonnet-4-20250514",...}}
 ```
+
+## Compliance API (Enterprise Only)
+
+Anthropic offers a separate [Compliance API](https://claude.com/blog/claude-platform-compliance-api) for Enterprise customers that provides an **activity feed** of security-relevant events across the organization. This is distinct from the usage/cost reports above.
+
+### What it tracks
+
+- **Admin and system activities** — adding workspace members, creating API keys, updating account settings, modifying entity access
+- **Resource activities** — creating files, downloading files, deleting skills
+
+It does **not** log inference activities (user prompts or model outputs).
+
+### Known data fields
+
+| Field | Description |
+|-------|-------------|
+| `created_at` | Event timestamp |
+| `actor_info` | Who performed the action |
+| `event` | Event type classification |
+| `event_info` | Event-specific details |
+| `entity_info` | Affected entity (account, invite, project, conversation, file, sso_connection) |
+| `ip_address` | Source IP address |
+| `device_id` | Device identifier |
+| `user_agent` | Client program info |
+| `client_platform` | Platform (iOS/Android) |
+
+### Access
+
+- Requires an **Enterprise plan** with the Compliance API enabled by your Anthropic account team
+- Uses the same Admin API key (`sk-ant-admin...`) for authentication
+- Supports filtering by time range, user, and API key
+- Full endpoint documentation is available through the [Anthropic Trust Center](https://trust.anthropic.com) (requires auth)
+
+> **Status:** Not yet implemented in this tool. The API endpoint specifications are not publicly documented. Once enterprise access is granted and the specs are available, support will be added alongside the existing reports.
